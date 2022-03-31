@@ -29,15 +29,19 @@ namespace HashTable
             hash.Add("17", "avoidable");
             hash.Add("18", "situations");
 
-            string hash5 = hash.Get("10");
+            string hash5 = hash.Get("3");
             Console.WriteLine("5th index Value is : " + hash5);
 
 
-            string hash2 = hash.Get("18");
+            string hash2 = hash.Get("15");
             Console.WriteLine("2th index Value is : " + hash2);
 
-            string hash3 = hash.Get("3");
-            Console.WriteLine("3th index Value is : " + hash3);
+            string hash17 = hash.Remove("15");
+
+            Console.WriteLine("After Removing ");
+
+            string hashremove = hash.Get("15");
+            Console.WriteLine("15th index Value is : " + hashremove);
         }
     }
 }
