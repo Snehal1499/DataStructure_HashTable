@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace HashTable
 {
-    public class MyMapNode<K, V>
+    internal class MyMapNode<K, V>
     {
         private readonly int size;
         private readonly LinkedList<KeyValue<K, V>>[] items;
+
         public MyMapNode(int size)
         {
             this.size = size;
@@ -20,62 +21,41 @@ namespace HashTable
             int position = key.GetHashCode() % size;
             return Math.Abs(position);
         }
-        public V Get(K Key)
+        public V Get(K key)
         {
-            int position = GetArrayPosition(Key);
-            LinkedList<KeyValue<K, V>> linkedlist = items[position];
+            int position = GetArrayPosition(key);
+            LinkedList<KeyValue<K, V>> linkedlist = GetLinkedList(position);
             foreach (KeyValue<K, V> item in linkedlist)
             {
-                if (item.Key.Equals(Key))
+                if (item.Key.Equals(key))
                 {
                     return item.Value;
                 }
             }
             return default(V);
         }
-        public void Add(K Key, V value)
+        public void Add(K key, V value)
         {
-            int position = GetArrayPosition(Key);
-            LinkedList<KeyValue<K, V>> linkedlist = items[position];
-            KeyValue<K, V> item = new KeyValue<K, V> { Key = Key, Value = value };
+            int position = GetArrayPosition(key);
+            LinkedList<KeyValue<K, V>> linkedlist = GetLinkedList(position);
+            KeyValue<K, V> item = new KeyValue<K, V>() { Key = key, Value = value };
             linkedlist.AddLast(item);
         }
-        public void Remove(K Key)
+        protected LinkedList<KeyValue<K, V>> GetLinkedList(int postion)
         {
-            int position = GetArrayPosition(Key);
-            LinkedList<KeyValue<K, V>> linkedlist = items[position];
-            bool itemFound = false;
-            KeyValue<K, V> foundItem = default(KeyValue<K, V>);
-            foreach (KeyValue<K, V> item in linkedlist)
+            LinkedList<KeyValue<K, V>> linkedlist = items[postion];
+            if (linkedlist == null)
             {
-                if (item.Key.Equals(Key))
-                {
-                    itemFound = true;
-                    foundItem = item;
-                }
+                linkedlist = new LinkedList<KeyValue<K, V>>();
+                items[postion] = linkedlist;
             }
-            if (itemFound)
-            {
-                linkedlist.Remove(foundItem);
-            }
+            return linkedlist;
         }
-
-        protected LinkedList<KeyValue<K, V>> GetLinkedList(int position)
-        {
-            LinkedList<KeyValue<K, V>> linkedList = items[position];
-            if (linkedList == null)
-            {
-                linkedList = new LinkedList<KeyValue<K, V>>();
-                items[position] = linkedList;
-            }
-            return linkedList;
-        }
-        public struct KeyValue<K, V>
-        {
-            public K Key { get; set; }
-            public V Value { get; set; }
-        }
-
-
     }
+    public struct KeyValue<K, V>
+    {
+        public K Key { get; set; }
+        public V Value { get; set; }
+    }
+
 }
